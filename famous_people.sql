@@ -1,5 +1,6 @@
+USE famous_people_project;
 CREATE TABLE famous_people (
-    id INTEGER,
+    id INTEGER PRIMARY KEY,
     name TEXT,
     studio TEXT,
     age INTEGER
@@ -18,7 +19,7 @@ INSERT INTO famous_people VALUES (10, 'Idris', 'Netflix', 51);
 SELECT * FROM famous_people;
 
 CREATE TABLE costars (
-    id INTEGER,
+    id INTEGER PRIMARY KEY,
     person1_id INTEGER,
     person2_id INTEGER,
     movie TEXT
@@ -47,11 +48,45 @@ JOIN famous_people b
 ON costars.person2_id = b.id
 WHERE a.studio= b.studio;
 
-SELECT AVG(age), studio
+SELECT
+    studio,
+    AVG(age) AS average_age
 FROM famous_people
 GROUP BY studio
-ORDER BY AVG(age) ASC;
+ORDER BY average_age ASC;
 
-SELECT studio, COUNT(*) AS Most_Stars
+SELECT 
+	studio,
+    COUNT(*) AS number_of_stars
 FROM famous_people
 GROUP BY studio
+ORDER BY number_of_stars DESC;
+
+SELECT
+    a.name,
+    COUNT(*) AS number_of_costars
+FROM costars
+JOIN famous_people a
+ON costars.person1_id = a.id
+GROUP BY a.name
+ORDER BY number_of_costars DESC;
+
+SELECT
+    studio,
+    ROUND(AVG(age), 1) AS average_age
+FROM famous_people
+GROUP BY studio
+ORDER BY average_age DESC;
+
+SELECT
+    movie,
+    a.name,
+    b.name,
+    a.studio,
+    b.studio
+FROM costars
+JOIN famous_people a
+ON costars.person1_id = a.id
+JOIN famous_people b
+ON costars.person2_id = b.id
+WHERE a.studio <> b.studio;
